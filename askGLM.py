@@ -42,7 +42,7 @@ class AIclient:
             sys.exit(0)
             
         print("Connection established successfully!")
-        sentence = input("Human: ")
+        sentence = input(f"Human(0 / {self.maxlen} bytes used): ")
         history = []
         
         while sentence != "exit":
@@ -61,7 +61,7 @@ class AIclient:
             message = json.loads(response)
             history = message["history"]
             print("AI: " + message["text"])
-            sentence = input("Human: ")
+            sentence = input(f"Human({len(response)} / {self.maxlen} bytes used): ")
         
         print("")
         print("Human exit detected! Preparing to tear down the connection...")
