@@ -61,8 +61,13 @@ class AIclient:
             history = message["history"]
             print("AI: " + message["text"])
             sentence = input("Human: ")
-            
-        self.interruptionHandler()
+        
+        print("")
+        print("Human exit detected! Preparing to tear down the connection...")
+        request = json.dumps({"text": "exit", "history": []}, ensure_ascii=False)
+        self.clientSocket.send(request.encode())  
+        self.clientSocket.close()
+        print("Connection closed successfully!")
 
 
 if __name__ == "__main__":
