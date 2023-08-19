@@ -1,0 +1,10 @@
+protobuf
+transformers
+cpm_kernels
+torch
+mdtex2html
+sentencepiece
+accelerate
+sse-starlette
+streamlit
+arrow
