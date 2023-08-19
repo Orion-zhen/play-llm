@@ -37,9 +37,10 @@ class AIclient:
     def run(self):
         try:
             self.clientSocket.connect((self.serverName, self.serverPort))
-        except ConnectionRefusedError:
-            print("Connection refused by the server, exiting...")
+        except ConnectionError:
+            print("Connection error, please confirm your server IP and port")
             sys.exit(0)
+            
         print("Connection established successfully!")
         sentence = input("Human: ")
         history = []
