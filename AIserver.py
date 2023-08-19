@@ -10,7 +10,7 @@ from transformers import AutoTokenizer, AutoModel
 class AIserver:
     def __init__(self) -> None:
         try:
-            with open("./log.json", "r", encoding="utf-8") as f:
+            with open("resource/log.json", "r", encoding="utf-8") as f:
                 self.log = json.load(f)
         except:
             self.log = []
@@ -46,7 +46,7 @@ class AIserver:
     def interruptionHandler(self, signal, frame) -> None:
         print("")
         print("Keyboard interruption detected! Logs have been written to log.json")
-        with open("./log.json", "w", encoding="utf-8") as f:
+        with open("resource/log.json", "w", encoding="utf-8") as f:
             json.dump(self.log, f, ensure_ascii=False, indent=4)
         sys.exit(0)
     
