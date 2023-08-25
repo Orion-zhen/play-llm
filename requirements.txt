@@ -8,3 +8,7 @@ accelerate
 sse-starlette
 streamlit
 arrow
+scipy
+transformers_stream_generator
+tiktoken
+einops
