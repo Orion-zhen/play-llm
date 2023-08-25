@@ -1,2 +1,1 @@
-# glm-Client-Server
-一个基于chatGLM2制作的python服务器和客户端，由python套接字实现
+一个兼容一些语言模型的服务器-客户端工具
