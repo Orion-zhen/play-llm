@@ -3,11 +3,18 @@ import arrow
 import signal
 import sys
 import os
+import argparse
 from socket import *
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
+from transformers.generation import GenerationConfig
 
 
 class AIserver:
+    parser = argparse.AurgumentParser(description="choose a model to load")
+    parser.add_argument("--chatglm2", "--chatglm", action="store_true", default=False, help="load chatglm2-6b")
+    parser.add_argument("-chatglm2-32k", "--chatglm-32k", action="store_true", default=False, help="load chatglm2-32k")
+    parser.add_argument("--qwen", "--Qwen", action="store_true", default=False, help="load 通义千问-7b")
+    
     def __init__(self) -> None:
         try:
             with open("resource/log.json", "r", encoding="utf-8") as f:
@@ -17,8 +24,21 @@ class AIserver:
             
         signal.signal(signal.SIGINT, self.interruptionHandler)
         
-        self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-        self.model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True, device='cuda').eval()
+        self.args = self.parser.parse_args()
+        
+        if self.args.chatglm2:
+            self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
+            self.model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True, device='cuda').eval()
+        elif self.args.chatglm_32k:
+            self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-32k", trust_remote_code=True)
+            self.model = AutoModel.from_pretrained("THUDM/chatglm2-32k", trust_remote_code=True, device='cuda').eval()
+        elif self.args.qwen:
+            self.tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
+            self.model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-7B-Chat", device_map="auto", trust_remote_code=True).eval()
+            self.model.generation_config = GenerationConfig.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
+        else:
+            print("Please specify a model to load")
+            sys.exit(0)
         
         try:
             with open("resource/knownIP.json", "r", encoding="utf8") as f:
