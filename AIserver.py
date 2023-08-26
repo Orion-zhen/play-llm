@@ -61,7 +61,7 @@ class AIserver:
         
         self.serverSocket = socket(AF_INET, SOCK_STREAM)
         
-        self.maxlen = 1024*1024 # 1MB
+        self.maxlen = 1024*1024*1024 # 1GB
         
     def interruptionHandler(self, signal, frame) -> None:
         print("")
