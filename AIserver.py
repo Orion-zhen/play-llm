@@ -45,7 +45,7 @@ class AIserver:
                 knownIP = json.load(f)
             self.serverPort = knownIP["Port"]
         except FileNotFoundError:
-            self.serverPort = input("Please enter the server port: ")
+            self.serverPort = int(input("Please enter the server port: "))
             ip = gethostbyname(gethostname())
             os.makedirs("resource", exist_ok=True)
             with open("resource/knownIP.json", "w", encoding="utf8") as f:

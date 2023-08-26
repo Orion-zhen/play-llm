@@ -16,7 +16,7 @@ class AIclient:
             self.serverPort = knownIP["Port"]
         except FileNotFoundError:
             self.serverName = input("Please enter the server IP address: ")
-            self.serverPort = input("Please enter the server port: ")
+            self.serverPort = int(input("Please enter the server port: "))
             os.makedirs("resource", exist_ok=True)
             with open("resource/knownIP.json", "w", encoding="utf8") as f:
                 json.dump({"Server": self.serverName, "Port": self.serverPort}, f, ensure_ascii=False, indent=4)
