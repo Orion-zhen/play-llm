@@ -161,3 +161,7 @@ cython_debug/
 
 # resource
 resource/
+
+# configurations
+config/model_config.py
+config/sserver_config.py
