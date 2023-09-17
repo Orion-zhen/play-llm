@@ -3,15 +3,19 @@ import arrow
 import signal
 import sys
 import os
-from socket import *
+from socket import socket, AF_INET, SOCK_STREAM
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
 from transformers.generation import GenerationConfig
 
 from utils.Arugs import parser
 from config.model_config import DEFAULT_MODEL, models_info
-from config.server_config import server_info, rDNS
+from config.server_config import server_info, rDNS, DEFAULT_DEVICE
+from utils.Device import llm_device, detect_device
 model_path = models_info[DEFAULT_MODEL]["path"]
-
+if DEFAULT_DEVICE == "auto":
+    device = llm_device(detect_device())
+else:
+    device = llm_device(DEFAULT_DEVICE)
 
 class AIserver:
     
@@ -27,7 +31,7 @@ class AIserver:
         self.args = parser.parse_args()
         
         self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-        self.model = AutoModel.from_pretrained(model_path, trust_remote_code=True, device='cuda').eval()
+        self.model = AutoModel.from_pretrained(model_path, trust_remote_code=True).to(device)
         
         self.serverPort = server_info["port"]
         self.rDNS = rDNS
