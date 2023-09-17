@@ -1,0 +1,11 @@
+models_info = {
+    "chatglm2-6b": {
+        "path": "THUDM/chatglm2-6b"
+    },
+    
+    "chatglm2-6b-32k": {
+        "path": "THUDM/chatglm2-6b-32k"
+    }
+}
+
+DEFAULT_MODEL = "chatglm2-6b"
