@@ -2,10 +2,8 @@ import json
 import arrow
 import signal
 import sys
-import os
 from socket import socket, AF_INET, SOCK_STREAM
-from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
-from transformers.generation import GenerationConfig
+from transformers import AutoTokenizer, AutoModel
 
 from utils.Arugs import parser
 from config.model_config import DEFAULT_MODEL, models_info

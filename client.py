@@ -1,7 +1,6 @@
 import json
 import signal
 import sys
-import os
 from socket import socket, AF_INET, SOCK_STREAM
 from config.server_config import server_info
 
