@@ -2,27 +2,17 @@ import json
 import signal
 import sys
 import os
-from socket import *
+from socket import socket, AF_INET, SOCK_STREAM
+from config.server_config import server_info
 
 
 class AIclient:
     def __init__(self) -> None:
         signal.signal(signal.SIGINT, self.interruptionHandler)
-        
-        try:
-            with open("resource/knownIP.json", "r", encoding="utf8") as f:
-                knownIP = json.load(f)
-            self.serverName = knownIP["Server"]
-            self.serverPort = knownIP["Port"]
-        except FileNotFoundError:
-            self.serverName = input("Please enter the server IP address: ")
-            self.serverPort = int(input("Please enter the server port: "))
-            os.makedirs("resource", exist_ok=True)
-            with open("resource/knownIP.json", "w", encoding="utf8") as f:
-                json.dump({"Server": self.serverName, "Port": self.serverPort}, f, ensure_ascii=False, indent=4)
-        
+
+        self.serverName = server_info["IP"]
+        self.serverPort = server_info["port"]
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
-        
         self.maxlen = 1024*1024*1024 # 1GB
     
     def interruptionHandler(self, signal, frame) -> None:
