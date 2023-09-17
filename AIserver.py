@@ -8,7 +8,9 @@ from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
 from transformers.generation import GenerationConfig
 
 from utils.Arugs import parser
-from config.model_config import DEFAULT_MODEL
+from config.model_config import DEFAULT_MODEL, models_info
+from config.server_config import server_info, rDNS
+model_path = models_info[DEFAULT_MODEL]["path"]
 
 
 class AIserver:
@@ -24,41 +26,12 @@ class AIserver:
         
         self.args = parser.parse_args()
         
-        if self.args.chatglm2:
-            self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-            self.model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True, device='cuda').eval()
-        elif self.args.chatglm_32k:
-            self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-32k", trust_remote_code=True)
-            self.model = AutoModel.from_pretrained("THUDM/chatglm2-32k", trust_remote_code=True, device='cuda').eval()
-        elif self.args.qwen:
-            self.tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
-            self.model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-7B-Chat", device_map="auto", trust_remote_code=True).eval()
-            self.model.generation_config = GenerationConfig.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
-        else:
-            print("Please specify a model to load")
-            sys.exit(0)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+        self.model = AutoModel.from_pretrained(model_path, trust_remote_code=True, device='cuda').eval()
         
-        try:
-            with open("resource/knownIP.json", "r", encoding="utf8") as f:
-                knownIP = json.load(f)
-            self.serverPort = knownIP["Port"]
-        except FileNotFoundError:
-            self.serverPort = int(input("Please enter the server port: "))
-            ip = gethostbyname(gethostname())
-            os.makedirs("resource", exist_ok=True)
-            with open("resource/knownIP.json", "w", encoding="utf8") as f:
-                json.dump({"Server": ip, "Port": self.serverPort}, f, ensure_ascii=False, indent=4)
-        
-        try:
-            with open("resource/DNS.json", "r", encoding="utf8") as f:
-                self.DNS = json.load(f)
-        except FileNotFoundError:
-            self.DNS = {}
-            with open("resource/DNS.json", "w", encoding="utf8") as f:
-                json.dump(self.DNS, f, ensure_ascii=False, indent=4)
-        
+        self.serverPort = server_info["port"]
+        self.rDNS = rDNS
         self.serverSocket = socket(AF_INET, SOCK_STREAM)
-        
         self.maxlen = 1024*1024*1024 # 1GB
         
     def interruptionHandler(self, signal, frame) -> None:
@@ -76,8 +49,8 @@ class AIserver:
         while True:
             conversation = {}
             connectionSocket, addr = self.serverSocket.accept()
-            if addr[0] in self.DNS:
-                addr = (self.DNS[addr[0]], addr[1])
+            if addr[0] in self.rDNS:
+                addr = (self.rDNS[addr[0]], addr[1])
             
             time = arrow.now().format('YYYY-MM-DD HH:mm:ss')
             print("**********************")
