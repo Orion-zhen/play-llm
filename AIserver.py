@@ -3,17 +3,15 @@ import arrow
 import signal
 import sys
 import os
-import argparse
 from socket import *
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
 from transformers.generation import GenerationConfig
 
+from utils.Arugs import parser
+from config.model_config import DEFAULT_MODEL
+
 
 class AIserver:
-    parser = argparse.ArgumentParser(description="choose a model to load")
-    parser.add_argument("--chatglm2", "--chatglm", action="store_true", default=False, help="load chatglm2-6b")
-    parser.add_argument("-chatglm2-32k", "--chatglm-32k", action="store_true", default=False, help="load chatglm2-32k")
-    parser.add_argument("--qwen", "--Qwen", action="store_true", default=False, help="load 通义千问-7b")
     
     def __init__(self) -> None:
         try:
@@ -24,7 +22,7 @@ class AIserver:
             
         signal.signal(signal.SIGINT, self.interruptionHandler)
         
-        self.args = self.parser.parse_args()
+        self.args = parser.parse_args()
         
         if self.args.chatglm2:
             self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
