@@ -164,4 +164,4 @@ resource/
 
 # configurations
 config/model_config.py
-config/sserver_config.py
+config/server_config.py
