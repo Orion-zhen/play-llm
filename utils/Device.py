@@ -6,11 +6,12 @@ def detect_device() -> str:
         if torch.backends.mps.is_available():
             return "mps"
     except:
-        try:
-            import torch_directml
-            return "dml"
-        except:
-            pass
+        pass
+    try:
+        import torch_directml
+        return "dml"
+    except:
+        pass
     return "cpu"
 
 
