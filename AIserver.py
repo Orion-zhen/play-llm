@@ -79,6 +79,7 @@ class AIserver:
                 dialog = {}
                 print("Client: " + request["text"])
                 response, history = self.model.chat(self.tokenizer, request["text"], history=request["history"])
+                response = response.replace("\n", "\r\n")
                 print("Server: " + response)
                 dialog["client"] = request["text"]
                 dialog["server"] = response
