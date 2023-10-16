@@ -1,12 +1,12 @@
+from urllib import response
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Union
 from threading import Thread
 from utils.Arugs import parser
-from utils.Handlers import load_model, call_public
-from config.model_config import MODEL_CARDS
+from utils.Handlers import create_worker
+from config.model_config import MODEL_CARDS, DEFAULT_MODEL
 import uvicorn
-import os
 
 args = parser.parse_args()
 
@@ -18,23 +18,20 @@ class chat(BaseModel):
     history: list = []
     
 app = FastAPI()
-model, tokenizer = load_model()
 
 @app.get("/chatbots")
 async def chatbots():
     return list(MODEL_CARDS.keys())
 
-@app.get("/chat")
-async def one_shot(q: str = ""):
-    response, _ = model.chat(tokenizer, q, history=[])
+@app.get("/chat/{chatbot}")
+async def one_shot(chatbot: str = DEFAULT_MODEL, q: str = ""):
+    worker = create_worker(chatbot)
+    response = worker.chat(q)
     return response
 
 @app.post("/chat")
 async def chat_api(query: chat):
-    response = chat()
-    response.answer, response.history = model.chat(tokenizer, query.query, history=query.history)
-    response.host = query.host
-    return response
+    pass
 
 
 if __name__ == "__main__":
