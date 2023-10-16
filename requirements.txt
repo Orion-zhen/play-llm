@@ -13,3 +13,5 @@ transformers_stream_generator
 tiktoken
 einops
 pathlib
+peft
+deepspeed
