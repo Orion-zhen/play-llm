@@ -4,7 +4,7 @@ from typing import Union
 from threading import Thread
 from utils.Arugs import parser
 from utils.Handlers import load_model, call_public
-from config.model_config import models_info
+from config.model_config import MODEL_CARDS
 import uvicorn
 import os
 
@@ -22,7 +22,7 @@ model, tokenizer = load_model()
 
 @app.get("/chatbots")
 async def chatbots():
-    return list(models_info.keys())
+    return list(MODEL_CARDS.keys())
 
 @app.get("/chat")
 async def one_shot(q: str = ""):
