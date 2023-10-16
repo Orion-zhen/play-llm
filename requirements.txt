@@ -14,4 +14,8 @@ tiktoken
 einops
 pathlib
 peft
-deepspeed
+pydantic
+fastapi
+uvicorn
+auto-gptq
+optimum
