@@ -40,3 +40,8 @@ def get_model_path(model_name: str) -> str:
 
     else:
         raise KeyError
+
+
+def create_worker(model_name: str):
+    worker = MODEL_CARDS[model_name]["worker"](get_model_path(model_name))
+    return worker
