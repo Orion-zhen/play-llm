@@ -117,7 +117,20 @@ with gradio.Blocks(theme="gradio/soft", title="CodeLlama-34B") as webui:
                     max_new_tokens = gradio.Number(label="Max New Tokens", value=8192)
                     language = gradio.Dropdown(
                         label="Language",
-                        choices=["C++", "Python", "Java", "Go"],
+                        choices=[
+                            "C++",
+                            "Python",
+                            "C",
+                            "HTML",
+                            "Java",
+                            "JavaScript",
+                            "Assembly",
+                            "Go",
+                            "Rust",
+                            "C#",
+                            "cmake",
+                            "Bash",
+                        ],
                         value="C++" if CODER == "codellama-34b-gptq" else "Python",
                     )
                 with gradio.Row():
