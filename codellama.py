@@ -37,6 +37,10 @@ def reset_prompt() -> str:
     return cur_prompt
 
 
+def clear():
+    return ""
+
+
 def translate(text, to_language="auto", text_language="auto"):
     text = parse.quote(text)
     url = GOOGLE_TRANSLATE_URL % (text, to_language, text_language)
@@ -160,13 +164,16 @@ with gradio.Blocks(theme="gradio/soft", title="CodeLlama-34B") as webui:
                         maximum=2.0,
                     )
             with gradio.Column():
+                with gradio.Row():
+                    gen_btn = gradio.Button(value="Generate")
+                    cls_btn = gradio.Button(value="Clear")
                 model_res_markdown = gradio.Markdown(
                     value="Model Output", visible=not argument.python, line_breaks=True
                 )
                 model_res_box = gradio.Textbox(
                     label="Model Output", visible=argument.python, lines=30
                 )
-                gen_btn = gradio.Button(value="Generate")
+                
                 gen_btn.click(
                     fn=pipe_gen,
                     inputs=[
@@ -184,6 +191,7 @@ with gradio.Blocks(theme="gradio/soft", title="CodeLlama-34B") as webui:
                     if not argument.python
                     else model_res_box,
                 )
+                cls_btn.click(fn=clear, outputs=user_inputs)
 
     with gradio.Tab("Prompt"):
         with gradio.Row():
@@ -221,12 +229,15 @@ with gradio.Blocks(theme="gradio/soft", title="CodeLlama-34B") as webui:
                 output_text = gradio.Textbox(
                     label="Translated Text", lines=10, show_copy_button=True
                 )
-                translate_btn = gradio.Button(label="Translate")
+                with gradio.Row():
+                    translate_btn = gradio.Button(value="Translate")
+                    cls_btn = gradio.Button(value="Clear")
                 translate_btn.click(
                     fn=translate,
                     inputs=[source_text, to_language, text_language],
                     outputs=output_text,
                 )
+                cls_btn.click(fn=clear, outputs=source_text)
 
 
 if __name__ == "__main__":
