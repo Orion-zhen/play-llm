@@ -111,7 +111,7 @@ def pipe_gen(
 
 # 可选的themes: NoCrypt/miku, xiaobaiyuan/theme_land, gradio/soft
 with gradio.Blocks(theme="gradio/soft", title="CodeLlama-34B") as webui:
-    with gradio.Tab("Inference"):
+    with gradio.Tab("Instruct"):
         with gradio.Row():
             with gradio.Column():
                 user_inputs = gradio.Textbox(
@@ -163,6 +163,12 @@ with gradio.Blocks(theme="gradio/soft", title="CodeLlama-34B") as webui:
                         minimum=0.0,
                         maximum=2.0,
                     )
+                prompt_box = gradio.Textbox(label="Prompt", lines=5, value=cur_prompt)
+                with gradio.Row():
+                    set_btn = gradio.Button(value="Set Prompt")
+                    reset_btn = gradio.Button(value="Reset Prompt")
+                    set_btn.click(fn=set_prompt, inputs=prompt_box, outputs=prompt_box)
+                    reset_btn.click(fn=reset_prompt, inputs=None, outputs=prompt_box)
             with gradio.Column():
                 with gradio.Row():
                     gen_btn = gradio.Button(value="Generate")
@@ -192,19 +198,6 @@ with gradio.Blocks(theme="gradio/soft", title="CodeLlama-34B") as webui:
                     else model_res_box,
                 )
                 cls_btn.click(fn=clear, outputs=user_inputs)
-
-    with gradio.Tab("Prompt"):
-        with gradio.Row():
-            with gradio.Column():
-                prompt_input = gradio.Textbox(label="Prompt Input", lines=10)
-                set_btn = gradio.Button(value="Set Prompt")
-            with gradio.Column():
-                prompt_output = gradio.Textbox(
-                    label="Current Prompt", lines=10, value=cur_prompt
-                )
-                reset_btn = gradio.Button(value="Reset Prompt")
-        set_btn.click(fn=set_prompt, inputs=prompt_input, outputs=prompt_output)
-        reset_btn.click(fn=reset_prompt, inputs=None, outputs=prompt_output)
 
     with gradio.Tab("Translators"):
         with gradio.Row():
