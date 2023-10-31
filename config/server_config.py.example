@@ -2,3 +2,11 @@ server_info = {
     "IP": "127.0.0.1",
     "port": 8000,
 }
+
+rDNS = {
+    
+}
+
+device_list = ["cuda", "mps", "dml", "cpu"]
+
+DEFAULT_DEVICE = "auto"
