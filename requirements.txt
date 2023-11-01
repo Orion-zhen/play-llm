@@ -19,3 +19,4 @@ fastapi
 uvicorn
 auto-gptq
 optimum
+gradio
