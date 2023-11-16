@@ -163,6 +163,9 @@ cython_debug/
 # resource
 resource/
 
+# test cases
+test.*
+
 # configurations
 config/model_config.py
 config/server_config.py
