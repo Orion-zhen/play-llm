@@ -166,6 +166,9 @@ resource/
 # test cases
 test.*
 
+# tmp files
+tmp/
+
 # configurations
 config/model_config.py
 config/server_config.py
