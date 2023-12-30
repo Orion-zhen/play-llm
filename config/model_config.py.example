@@ -1,83 +1,28 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel
+LLM_ROOT_DIR = "/home/orion/ai/Models"
 
+LLM = "Qwen-14B-Chat"
 
-class AutoModelWorker:
-    def __init__(self, model_name: str):
-        self.model_name = model_name
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name, trust_remote_code=True
-        )
-        self.model = AutoModel.from_pretrained(
-            model_name, device_map="auto", trust_remote_code=True
-        ).eval()
-        self.history = []
-
-    def chat(self, inputs: str) -> str:
-        # inputs = self.tokenizer(inputs, return_tensors="pt")
-        outputs, self.history = self.model.chat(
-            self.tokenizer, inputs, history=self.history
-        )
-        return outputs
-
-    def clear(self):
-        self.history = []
-
-
-class AutoModelForCausalLMWorker:
-    def __init__(self, model_name: str):
-        self.__model_name = model_name
-        self.__tokenizer = AutoTokenizer.from_pretrained(
-            self.__model_name, trust_remote_code=True, use_fast=True
-        )
-        self.__model = AutoModelForCausalLM.from_pretrained(
-            self.__model_name, device_map="auto", trust_remote_code=True
-        ).eval()
-        self.history = []
-
-    def chat(self, inputs: str) -> str:
-        # inputs = self.tokenizer(inputs, return_tensors="pt")
-        outputs, self.history = self.__model.chat(
-            self.__tokenizer, inputs, history=self.history
-        )
-        return outputs
-
-    def clear(self):
-        self.history = []
-
-    @property
-    def model(self):
-        return self.__model
-
-    @property
-    def tokenizer(self):
-        return self.__tokenizer
-
-
-MODEL_ROOT_PATH = "/home/orion/AImodels/nlp"
-
-MODEL_CARDS = {
-    "chatglm2-6b": {
-        "path": "/home/orion/AImodels/nlp/llm/THUDM/chatglm2-6b",
-        "worker": AutoModelWorker,
-    },
-    "chatglm2-6b-32k": {"path": "THUDM/chatglm2-6b-32k", "worker": AutoModelWorker},
-    "Qwen-7B-Chat": {"path": "Qwen/Qwen-7B-Chat", "worker": AutoModelForCausalLMWorker},
-    "Qwen-14B-Chat-Int4": {
-        "path": "Qwen/Qwen-14B-Chat-Int4",
-        "worker": AutoModelForCausalLMWorker,
-    },
-    "codellama-34b-gptq": {
-        "path": "TheBloke/CodeLlama-34B-Instruct-GPTQ",
-        "worker": AutoModelForCausalLMWorker,
-    },
-    "codellama-34b-python-gptq": {
-        "path": "TheBloke/CodeLlama-34B-Python-GPTQ",
-        "worker": AutoModelForCausalLMWorker
-    }
+LLM_CARD = {
+    "chatglm3-6b":
+        {
+            "path": "chatglm3-6b",
+            "params": [],
+        },
+    "WizardLM-7B-uncensored":
+        {
+            "path": "WizardLM-7B-uncensored-GPTQ",
+            "params": ["--enable-exllama"],
+        },
+    "Qwen-14B-Chat":
+        {
+            "path": "Qwen-14B-Chat-GPTQ",
+            "params": [],
+            "note": "不能开exllama, cpu版可以试用xfastertransformer"
+        },
+    "OrionStar-Yi-34B":
+        {
+            "path": "OrionStar-Yi-34B-Chat-Llama-GPTQ",
+            "params": ["--enable-exllama"],
+            "note": "效果不行, 开了exllama就说个不停, 不开就跑不了; 能力也没qwen强"
+        }
 }
-
-DEFAULT_MODEL = "Qwen-14B-Chat-Int4"
-
-DEFULT_PROMPT = "<s>[INST] <<SYS>>\\nProvide the anwsers in {sys}\\n<</SYS>>\\n\\nYou are a helpful coder. \
-Write code to solve the following coding problem that obeys the constraints and passes the example test cases. Please wrap your code answer using ```. \
-Instructions is listed below:\\n{user}[/INST]"
