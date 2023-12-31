@@ -18,7 +18,7 @@ def clear_logs(dir: str):
 
 
 def siginit_handler(signum, frame):
-    clear_logs(".")
+    clear_logs(os.getenv("PWD"))
 
     print("Exiting...")
     for p in process_list:
