@@ -23,6 +23,10 @@ def siginit_handler(signum, frame):
     print("Exiting...")
     for p in process_list:
         p.terminate()
+    
+    # make sure all process terminated
+    os.system("ps -eo pid,user,cmd|grep -P 'openai.py|fastchat.serve|multiprocessing'|grep -v grep|awk '{print $1}'|xargs kill -9")
+    
     time.sleep(0.5)
     exit(0)
 
