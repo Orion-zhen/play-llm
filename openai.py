@@ -6,15 +6,19 @@ import time
 import os
 
 
-def siginit_handler(signum, frame):
+def clear_logs(dir: str):
     print("\nClearing logs...")
-    for filename in os.listdir("."):
+    for filename in os.listdir(dir):
         if filename.endswith(".log"):
-            filepath = os.path.join(".", filename)
+            filepath = os.path.join(dir, filename)
             try:
                 os.remove(filepath)
             except:
                 print(f"Failed to remove {filepath}")
+
+
+def siginit_handler(signum, frame):
+    clear_logs(".")
 
     print("Exiting...")
     for p in process_list:
@@ -34,11 +38,11 @@ if __name__ == "__main__":
         )
         + " 🤗| "
     )
-    
+
     print("\n" + "=" * len(console_msg))
     print(console_msg)
     print("=" * len(console_msg) + "\n")
-    
+
     model_path = os.path.join(LLM_ROOT_DIR, LLM_CARD[LLM]["path"])
     model_names = [
         "gpt-3.5-turbo",
