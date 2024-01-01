@@ -1,4 +1,5 @@
 fschat
+transformers
 einops
 transfomers_stream_generator
 optimum
