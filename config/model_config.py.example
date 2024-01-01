@@ -1,11 +1,18 @@
+# 存放你所有模型的文件夹
+# 例如chatglm3-6b存放在/path/to/models/chatglm3-6b
+# 那么LLM_ROOT_DIR应该设置为/path/to/models
 LLM_ROOT_DIR = "/path/to/models"
 
+# 选择你要加载的模型名
 LLM = "Qwen-14B-Chat" # chatglm3-6b | Qwen-14B-Chat
 
 LLM_CARD = {
+    # 模型名称, 用于加载模型
     "chatglm3-6b":
         {
+            # 模型文件相对路径(相对LLM_ROOT_DIR)
             "path": "chatglm3-6b-32k",
+            # 模型加载参数
             "params": [],
         },
     "Qwen-7B-Chat":

@@ -1,5 +1,8 @@
+# openai服务器运行的IP地质, windows建议改为127.0.0.1
 HOST = "0.0.0.0"
 
+# openai服务器运行的端口, 访问协议为HTTP
 PORT = "11451"
 
+# opdnai服务器运行的端口, 访问协议为HTTPS
 PORT_SSL = "11452"
