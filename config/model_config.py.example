@@ -1,12 +1,18 @@
-LLM_ROOT_DIR = "/home/orion/ai/Models"
+LLM_ROOT_DIR = "/path/to/models"
 
-LLM = "Qwen-14B-Chat"
+LLM = "Qwen-14B-Chat" # chatglm3-6b | Qwen-14B-Chat
 
 LLM_CARD = {
     "chatglm3-6b":
         {
-            "path": "chatglm3-6b",
+            "path": "chatglm3-6b-32k",
             "params": [],
+        },
+    "Qwen-7B-Chat":
+        {
+            "path": "Qwen-7B-Chat-Int4",
+            "params": ["--max-gpu-memory", "'20GiB'"],
+            "note": "14B-Int4有时候都会爆显存, 离谱"
         },
     "WizardLM-7B-uncensored":
         {
@@ -15,14 +21,25 @@ LLM_CARD = {
         },
     "Qwen-14B-Chat":
         {
-            "path": "Qwen-14B-Chat-GPTQ",
+            "path": "Qwen-14B-Chat-Int4",
+            "params": ["--max-gpu-memory", "'20GiB'"],
+            "note": "不能开exllama, cpu版可以试用xfastertransformer; Int8开满token会爆显存"
+        },
+    "tigerbot-13b-chat":
+        {
+            "path": "tigerbot-13b-chat-v5-4bit-exl2",
             "params": [],
-            "note": "不能开exllama, cpu版可以试用xfastertransformer"
         },
     "OrionStar-Yi-34B":
         {
             "path": "OrionStar-Yi-34B-Chat-Llama-GPTQ",
             "params": ["--enable-exllama"],
             "note": "效果不行, 开了exllama就说个不停, 不开就跑不了; 能力也没qwen强"
+        },
+    "SUS-Chat-34B":
+        {
+            "path": "SUS-Chat-34B-GPTQ",
+            "params": ["--max-gpu-memory", "'20GiB'"],
+            "note": ["--enable-exllama", "--exllama-cache-8bit", "--exllama-max-seq-len", "2048"]
         }
 }

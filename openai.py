@@ -1,5 +1,5 @@
 from config.model_config import LLM_ROOT_DIR, LLM_CARD, LLM
-from config.server_config import HOST, PORT
+from config.server_config import HOST, PORT, PORT_SSL
 import subprocess
 import signal
 import time
@@ -46,6 +46,8 @@ if __name__ == "__main__":
     print("\n" + "=" * len(console_msg))
     print(console_msg)
     print("=" * len(console_msg) + "\n")
+    
+    ssl_ok = True if (os.getenv("SSL_KEYFILE")!=None and os.getenv("SSL_CERTFILE")!=None) else False
 
     model_path = os.path.join(LLM_ROOT_DIR, LLM_CARD[LLM]["path"])
     model_names = [
@@ -83,6 +85,20 @@ if __name__ == "__main__":
     p_model_worker = subprocess.Popen(cmd_model_worker)
     p_openai_api_server = subprocess.Popen(cmd_openai_api_server)
     process_list = [p_server_controller, p_model_worker, p_openai_api_server]
+    
+    if ssl_ok:
+        cmd_openai_api_server_ssl = [
+            "python",
+            "-m",
+            "fastchat.serve.openai_api_server",
+            "--host",
+            str(HOST),
+            "--port",
+            str(PORT_SSL),
+            "--ssl",        
+        ]
+        p_openai_api_server_ssl = subprocess.Popen(cmd_openai_api_server_ssl)
+        process_list.append(p_openai_api_server_ssl)
 
     for p in process_list:
         p.wait()
