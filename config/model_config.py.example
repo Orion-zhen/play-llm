@@ -6,6 +6,16 @@ LLM_ROOT_DIR = "/path/to/models"
 # 选择你要加载的模型名
 LLM = "Qwen-14B-Chat" # chatglm3-6b | Qwen-14B-Chat
 
+# 服务器显示的模型名(背后都是LLM, 只是显示不同)
+MODEL_NAMES = [
+    "gpt-3.5-turbo",
+    "gpt-3.5-turbo-instruct",
+    "gpt-4",
+    "gpt-4-turbo",
+    "text-davinci-003",
+    "text-embedding-ada-002",
+]
+
 LLM_CARD = {
     # 模型名称, 用于加载模型
     "chatglm3-6b":

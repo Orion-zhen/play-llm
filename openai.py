@@ -1,4 +1,4 @@
-from config.model_config import LLM_ROOT_DIR, LLM_CARD, LLM
+from config.model_config import LLM_ROOT_DIR, LLM_CARD, LLM, MODEL_NAMES
 from config.server_config import HOST, PORT, PORT_SSL
 import subprocess
 import signal
@@ -50,13 +50,7 @@ if __name__ == "__main__":
     ssl_ok = True if (os.getenv("SSL_KEYFILE")!=None and os.getenv("SSL_CERTFILE")!=None) else False
 
     model_path = os.path.join(LLM_ROOT_DIR, LLM_CARD[LLM]["path"])
-    model_names = [
-        "gpt-3.5-turbo",
-        "gpt-4",
-        "gpt-4-turbo",
-        "text-davinci-003",
-        "text-embedding-ada-002",
-    ]
+    model_names = MODEL_NAMES
 
     cmd_server_controller = ["python", "-m", "fastchat.serve.controller"]
     cmd_model_worker = [
