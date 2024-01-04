@@ -21,13 +21,10 @@ def siginit_handler(signum, frame):
     clear_logs(os.getenv("PWD"))
 
     print("Exiting...")
-    for p in process_list:
-        p.terminate()
-    
     # make sure all process terminated
-    os.system("ps -eo pid,user,cmd|grep -P 'openai.py|fastchat.serve|multiprocessing'|grep -v grep|awk '{print $1}'|xargs kill -9")
-    
-    time.sleep(0.5)
+    os.system(
+        "ps -eo pid,user,cmd|grep -P 'openai.py|fastchat.serve|multiprocessing'|grep -v grep|awk '{print $1}'|xargs kill -9"
+    )
     exit(0)
 
 
@@ -46,8 +43,12 @@ if __name__ == "__main__":
     print("\n" + "=" * len(console_msg))
     print(console_msg)
     print("=" * len(console_msg) + "\n")
-    
-    ssl_ok = True if (os.getenv("SSL_KEYFILE")!=None and os.getenv("SSL_CERTFILE")!=None) else False
+
+    ssl_ok = (
+        True
+        if (os.getenv("SSL_KEYFILE") != None and os.getenv("SSL_CERTFILE") != None)
+        else False
+    )
 
     model_path = os.path.join(LLM_ROOT_DIR, LLM_CARD[LLM]["path"])
     model_names = MODEL_NAMES
@@ -75,24 +76,27 @@ if __name__ == "__main__":
     for param in LLM_CARD[LLM]["params"]:
         cmd_model_worker.append(param)
 
-    p_server_controller = subprocess.Popen(cmd_server_controller)
-    p_model_worker = subprocess.Popen(cmd_model_worker)
-    p_openai_api_server = subprocess.Popen(cmd_openai_api_server)
-    process_list = [p_server_controller, p_model_worker, p_openai_api_server]
-    
-    if ssl_ok:
-        cmd_openai_api_server_ssl = [
-            "python",
-            "-m",
-            "fastchat.serve.openai_api_server",
-            "--host",
-            str(HOST),
-            "--port",
-            str(PORT_SSL),
-            "--ssl",        
-        ]
-        p_openai_api_server_ssl = subprocess.Popen(cmd_openai_api_server_ssl)
-        process_list.append(p_openai_api_server_ssl)
+    while True:
+        p_server_controller = subprocess.Popen(cmd_server_controller)
+        p_model_worker = subprocess.Popen(cmd_model_worker)
+        p_openai_api_server = subprocess.Popen(cmd_openai_api_server)
+        process_list = [p_server_controller, p_model_worker, p_openai_api_server]
 
-    for p in process_list:
-        p.wait()
+        if ssl_ok:
+            cmd_openai_api_server_ssl = [
+                "python",
+                "-m",
+                "fastchat.serve.openai_api_server",
+                "--host",
+                str(HOST),
+                "--port",
+                str(PORT_SSL),
+                "--ssl",
+            ]
+            p_openai_api_server_ssl = subprocess.Popen(cmd_openai_api_server_ssl)
+            process_list.append(p_openai_api_server_ssl)
+
+        time.sleep(6 * 60 * 60)  # restart for every 6 hours to avoid possible gpu crash
+        for p in process_list:
+            p.terminate()
+        print("\nRestarting...\n")
