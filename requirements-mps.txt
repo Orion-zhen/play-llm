@@ -1,7 +1,7 @@
 fschat
 transformers
 einops
-transfomers_stream_generator
+transformers_stream_generator
 optimum
 exllamav2
 
