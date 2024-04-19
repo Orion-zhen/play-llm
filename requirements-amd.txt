@@ -1,4 +1,5 @@
 fschat
+fastapi
 transformers
 einops
 transformers_stream_generator
